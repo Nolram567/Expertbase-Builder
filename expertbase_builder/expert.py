@@ -300,8 +300,8 @@ class Expert:
         if len(keywords) == 1 and "," in keywords[0]:
             keywords = [k.strip() for k in keywords[0].split(",")]
 
-        builder = ['<div class="orcid-keywords">']
-        builder.extend(f'<span class="tag-detail">{word}</span>' for word in keywords)
+        builder = ['<div class="quarto-categories">']
+        builder.extend(f'<span class="quarto-category tag-beige">{word}</span>' for word in keywords)
         builder.append("</div>")
 
         return "".join(builder)
@@ -329,8 +329,8 @@ class Expert:
         with open(Expert.tadirah_tooltips_path, 'r', encoding="utf-8") as file:
             tooltips = json.load(file)
 
-        builder = ['<div class="tadirah-keywords">']
-        builder.extend(f'<span class="tag-tadirah-detail">{Expert.__format_tooltip(word, tooltips.get(word, ""))}</span>' for word in keywords)
+        builder = ['<div class="quarto-categories">']
+        builder.extend(f'<span class="quarto-category tag tuerkis">{Expert.__format_tooltip(word, tooltips.get(word, ""))}</span>' for word in keywords)
         builder.append("</div>")
 
         return "".join(builder)
