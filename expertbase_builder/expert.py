@@ -212,6 +212,11 @@ class Expert:
             if len(orcid_keywords) == 1 and "," in orcid_keywords[0]:
                 orcid_keywords = [k.strip() for k in orcid_keywords[0].split(",")]
 
+            # Ausgewählte Sonderzeichen entfernen, sodass der Filter korrekt generiert wird.
+            for i, keyword in enumerate(orcid_keywords):
+                if not keyword[0].isalnum():
+                    orcid_keywords[i] = keyword.replace("(", "").replace(")", "").replace("#", "")
+
             orcid_keywords = [k.title() for k in orcid_keywords]
 
             return ";".join(orcid_keywords)
