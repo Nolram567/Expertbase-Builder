@@ -1,6 +1,7 @@
 import os
 import json
 import logging
+from pathlib import Path
 
 from .orcid_aggregator import *
 from .expert import Expert
@@ -15,13 +16,14 @@ def create_tadirah_map(file_path: str) -> dict:
 
     Args:
         file_path: Der Dateipfad zu der CSV-Datei.
+
     Returns:
         Ein Dictionary, das die ORCIDS auf die tadirah-Schlagwörter abbildet.
     """
     orcids = []
     tadirah = []
 
-    with open(file_path, newline='', encoding='utf-8') as csvfile:
+    with open(Path(file_path), newline='', encoding='utf-8') as csvfile:
         reader = csv.reader(csvfile)
         next(reader)
         for row in reader:
@@ -129,7 +131,7 @@ class ExpertBase:
         Die Methode deserialisiert ein Expertbase-Objekt.
 
         Args:
-            path: Der Dateipfad, unter dem das Expertbase-Objekt abgespeichert werden soll.
+            path: Der Dateipfad, unter dem das Expertbase-Objekt gespeichert ist.
         """
         try:
             with open(path, "r", encoding='utf-8') as f:
@@ -183,6 +185,7 @@ class ExpertBase:
         Args:
             path: Der Dateipfad und der Name der Ausgabedatei.
             name: Der Name des Objekts.
+            filename: Der Dateiname der Ausgabedatei.
         """
 
         logger.info(f"Das Expertbase-Objekt wird zu einer YAML-Datei geparst.")
@@ -233,7 +236,7 @@ class ExpertBase:
             properties = next(reader)
             orcids = self.get_orcids_as_list()
         except IOError as e:
-            logger.error(f"Die Datei {path} konnte nicht geöffnet werden:\n {e}")
+            logger.error(f"Die Datei {path} konnte nicht geöffnet oder verarbeitet werden:\n {e}")
             raise
 
         if len(properties) < 2:
