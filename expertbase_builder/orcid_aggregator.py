@@ -48,7 +48,7 @@ def fetch_orcid_data(orcid: str, endpoint: str) -> dict | None:
     if response.status_code == 200:
         return response.json()
     else:
-        logger.warning(f"Fehler beim Abrufen von ORCID {orcid}: {response.status_code}")
+        logger.warning(f"Fehler beim Abrufen von {orcid}. HTTP-Statuscode: {response.status_code}")
         return None
 
 def extract_names(orcid_data: dict | None) -> dict[str, str]:
@@ -63,7 +63,7 @@ def extract_names(orcid_data: dict | None) -> dict[str, str]:
     """
     extracted = {}
     if not orcid_data:
-        logger.warning("Der ORCID-Datensatz ist leer.")
+        logger.warning("Leerer ORCID-Datensatz. Gebe leeres Dictionary zurück...")
         return {}
 
     names = orcid_data.get("name", {})
