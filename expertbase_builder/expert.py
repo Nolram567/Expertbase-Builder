@@ -19,9 +19,11 @@ def search_wikidata_id(search_string: str, max_retries: int = 5) -> str:
     Args:
         search_string: Die Entität, nach der gesucht wird.
         max_retries: Anzahl der Wiederholungsversuche bei 429/Serverfehlern.
+
     Returns:
         Die QID oder der Suchstring, wenn kein Eintrag gefunden wird.
     """
+
     headers = {
         "User-Agent": "MyWikidataBot/1.0 (https://github.com/Nolram567/Expert-Base-Builder; mbgdevelopment@proton.me)"
     }
@@ -50,7 +52,7 @@ def search_wikidata_id(search_string: str, max_retries: int = 5) -> str:
                 logger.warning(f"HTTP-Statuscode 429 Too Many Requests – Warte {backoff} Sekunden...")
                 time.sleep(backoff)
                 retries += 1
-                backoff = min(backoff * 2, 60)  # Max. 1 Minute warten
+                backoff = min(backoff * 2, 60)  # Exponentieller Backoff Max. 1 Minute warten
                 continue
 
             response.raise_for_status()
@@ -76,8 +78,10 @@ class Expert:
     """
     Objekte dieser Klasse repräsentieren einen Experten der HERMES-Expertbase.
 
-    Diese Klasse stellt Methoden zur Verfügung, um einzelne Experten zu erstellen, zu verwalten und in semantische
-    Repräsentationen zu übersetzen.
+    Diese Klasse stellt Methoden zur Verfügung, um einzelne Experten zu erstellen, zu verwalten und zu serialisieren.
+
+    Die Klassenvariable "tadirah_tooltips_path" verweist auf die JSON-Datei, welche die TaDiRAH-Konzepte auf ihre
+    Beschreibung abbildet.
 
     Die Objektvariable "orcid" ist die ORCID des Experten.
     Die Objektvariable "properties" enthält alle definierten Eigenschaften des Experten als Dictionary nach dem Muster:
@@ -122,6 +126,7 @@ class Expert:
         Args:
             formated: Spezifiziert, ob der Name als Einzelstring formatiert zurückgegeben werden soll oder als Tupel mit
             dem Vor- und Nachnamen.
+
         Returns: Den Namen als Tupel aus vor uns Nachname oder als String nach dem Muster 'Vorname Nachname'.
         """
         return (
@@ -178,6 +183,8 @@ class Expert:
         """
         Die Methode gibt die Organisationen zurück, an denen der Experte derzeit beschäftigt ist. Sie nutzt die wikidata
         qid, um Duplikate in unterschiedlichen Schreibungen zu identifizieren.
+
+        Returns: Die Liste der Organisationen.
         """
         current_employment = self.properties.get("Derzeitige Beschäftigung", [])
         organisations = []
@@ -228,7 +235,8 @@ class Expert:
         Diese Methode gibt die tadirah-Schlagwörter des Experten als Liste oder als string zurück.
 
         Args:
-            formated: Wenn dieses Argument true ist, dann werden die Wörter konkateniert und mit Semikola getrennt.
+            formated: Wenn dieses Argument true ist, werden die Wörter konkateniert und mit Semikola getrennt.
+
         Returns:
             Die tadirah-Schlagwörter des Experten als String oder Liste von Strings.
         """
@@ -295,7 +303,8 @@ class Expert:
     @staticmethod
     def __format_orcid_keywords(keywords: list[str]) -> str:
         """
-        Die Helfermethode baut und formatiert das div-Element für die ORCID-Schlagwörter auf der Personenseite.
+        Helfermethode für parse_qmd(): Die Helfermethode baut und formatiert das div-Element für die ORCID-Schlagwörter
+        auf der Personenseite.
 
         Args:
             keywords: Die Keywords als Liste.
@@ -314,14 +323,21 @@ class Expert:
     @staticmethod
     def __format_tooltip(keyword: str, tip: str) -> str:
         """
-        Baut das abbr-Element für die tadirah-Schlagworte auf der Personenseite.
+        Helfermethode für parse_qmd(): Baut das abbr-Element für die tadirah-Schlagworte auf der Personenseite.
+
+        Args:
+            keyword: Das Schlüsselwort.
+            tip: Der Text für das Tooltip.
+
+        Returns: Das gebautet Tooltip.
         """
         return f'<abbr data-tooltip="{tip}">{keyword}</abbr>'
 
     @staticmethod
     def __format_tadirah_keywords(keywords: list[str]) -> str:
         """
-        Die Helfermethode baut und formatiert das div-Element für die tadirah-Schlagworte auf der Personenseite.
+        Helfermethode für parse_qmd(): Die Helfermethode baut und formatiert das div-Element für die tadirah-Schlagworte
+        auf der Personenseite.
 
         Args:
             keywords: Die tadirah-Schlagworte als Liste von Strings.
