@@ -59,17 +59,17 @@ def search_wikidata_id(search_string: str, max_retries: int = 5) -> str:
             if data.get('search'):
                 return data['search'][0]['id']
             else:
-                logger.warning("Die Eingabe wurde nicht in Wikidata gefunden. Gebe Eingabe zurück...")
+                logger.warning(f"Die Eingabe '{search_string}' wurde nicht in Wikidata gefunden. Gebe Eingabe zurück...")
                 return search_string
 
         except json.JSONDecodeError as e :
-            logger.error(f"Die Antwort von Wikidata konnte nicht dekodiert werde: {e}.")
+            logger.warning(f"Die Antwort von Wikidata konnte nicht dekodiert werde:\n {e}.")
             return search_string
         except requests.RequestException as e:
-            logger.error(f"Wikidata-Request fehlgeschlagen: {e}")
+            logger.warning(f"Wikidata-Request fehlgeschlagen:\n {e}")
             return search_string
 
-    logger.error("Maximale Anzahl an Retries erreicht.")
+    logger.warning("Maximale Anzahl an Retries für Anfragen an die Wikidata-API erreicht.")
     return search_string
 
 class Expert:
