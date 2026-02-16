@@ -38,6 +38,7 @@ def fetch_orcid_data(orcid: str, endpoint: str) -> dict | None:
     Args:
         orcid: ORCID-Bezeichner.
         endpoint: Der Endpunkt, der abgefragt werden soll.
+
     Returns:
         ORCID-Daten als Dictionary oder None bei Fehler.
     """
@@ -71,10 +72,11 @@ def extract_names(orcid_data: dict | None) -> dict[str, str]:
 
 def extract_mail(orcid_data: dict | None) -> str:
     """
-    Extrahiert die erste E-Mail-Adresse aus einem Personendatensatz.
+    Extrahiert die erste E-Mail-Adresse aus einem ORCID-Personendatensatz.
 
     Args:
         orcid_data: Die ORCID-Daten vom /person-Endpunkt der ORCID-API.
+
     Returns:
         Die E-Mail als String.
     """
