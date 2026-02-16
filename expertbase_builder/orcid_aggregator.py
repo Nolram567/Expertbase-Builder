@@ -62,9 +62,6 @@ def extract_names(orcid_data: dict | None) -> dict[str, str]:
         Extrahierte Namen als Dictionary.
     """
     extracted = {}
-    if not orcid_data:
-        logger.warning("Leerer ORCID-Datensatz. Gebe leeres Dictionary zurück...")
-        return {}
 
     names = orcid_data.get("name", {})
     extracted["given-names"] = names.get("given-names", {}).get("value", "")
@@ -95,6 +92,7 @@ def extract_current_employments(orcid_data: dict | None) -> list[str]:
     Returns:
         Extrahierte Beschäftigungsverhältnisse als Dictionary.
     """
+
     current_employments = []
 
     for employment in orcid_data.get("employments", {}).get("affiliation-group", []):
