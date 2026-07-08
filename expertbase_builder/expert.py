@@ -61,7 +61,8 @@ def search_wikidata_id(search_string: str, max_retries: int = 5) -> str:
             if data.get('search'):
                 return data['search'][0]['id']
             else:
-                logger.warning(f"Die Eingabe '{search_string}' wurde nicht in Wikidata gefunden. Gebe Eingabe zurück...")
+                logger.warning(f"Die Eingabe '{search_string}' wurde nicht in Wikidata gefunden."
+                               f" Gebe Eingabe zurück...")
                 return search_string
 
         except json.JSONDecodeError as e :
@@ -149,7 +150,8 @@ class Expert:
             n: Spezifiziert, wie viele Beschäftigungsverhältnisse maximal aufgenommen werden sollen.
 
         Returns:
-            Die derzeitigen Beschäftigungsverhältnisse als Liste aus Tripeln mit Strings oder als formatierte Markdown-Aufzählung.
+            Die derzeitigen Beschäftigungsverhältnisse als Liste aus Tripeln mit Strings oder als formatierte
+            Markdown-Aufzählung.
         """
         current_employment = self.properties.get("Derzeitige Beschäftigung", [])
 
@@ -262,7 +264,7 @@ class Expert:
 
         Args:
             output_directory_path: Der relative Pfad zu dem Ordner für die Ausgabe des qmd-Dokuments.
-            chevron_template_path: Der Pfad zum Chevron-Template, das für den Bau der Detailseiten verwendet werden soll.
+            chevron_template_path: Der Pfad zum Chevron-Template, für den Bau der Detailseiten.
         """
 
         logger.info(f"Das qmd-Dokument für {self.get_name()} wird erstellt...")
@@ -351,7 +353,9 @@ class Expert:
             tooltips = json.load(file)
 
         builder = ['<div class="quarto-categories">']
-        builder.extend(f'<span class="quarto-category tag-tuerkis">{Expert.__format_tooltip(word, tooltips.get(word, ""))}</span>' for word in keywords)
+        builder.extend(f'<span class="quarto-category tag-tuerkis">'
+                       f'{Expert.__format_tooltip(word, tooltips.get(word, ""))}'
+                       f'</span>' for word in keywords)
         builder.append("</div>")
 
         return "".join(builder)
