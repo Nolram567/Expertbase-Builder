@@ -105,20 +105,20 @@ class Expert:
             orcid: Die ORCID des Expertenobjekts.
             data: Die Eigenschaften des Expertenobjekts als Dictionary.
         """
-        self.orcid = orcid
-        self.properties = data
+        self._orcid = orcid
+        self._properties = data
 
     def get_properties(self):
         """
         Diese Methode gibt die Eigenschaften des Expertenobjekts zurück.
         """
-        return self.properties.copy()
+        return self._properties.copy()
 
     def get_orcid(self) -> str:
         """
         Diese Methode gibt die ORCID des Expertenobjekts zurück.
         """
-        return self.orcid
+        return self._orcid
 
     def get_name(self, formated: bool = True) -> str | tuple[str, str]:
         """
@@ -131,11 +131,11 @@ class Expert:
         Returns: Den Namen als Tupel aus vor uns Nachname oder als String nach dem Muster 'Vorname Nachname'.
         """
         return (
-            f"{self.properties.get('Vorname', '')} {self.properties.get('Nachname', '')}"
+            f"{self._properties.get('Vorname', '')} {self._properties.get('Nachname', '')}"
             if formated
             else [
-                self.properties.get("Vorname", ""),
-                self.properties.get("Nachname", ""),
+                self._properties.get("Vorname", ""),
+                self._properties.get("Nachname", ""),
             ]
         )
 
@@ -153,7 +153,7 @@ class Expert:
             Die derzeitigen Beschäftigungsverhältnisse als Liste aus Tripeln mit Strings oder als formatierte
             Markdown-Aufzählung.
         """
-        current_employment = self.properties.get("Derzeitige Beschäftigung", [])
+        current_employment = self._properties.get("Derzeitige Beschäftigung", [])
 
         if formated:
 
@@ -170,7 +170,7 @@ class Expert:
             return "\n".join(lines)
 
         else:
-            return self.properties.get("Derzeitige Beschäftigung", [])[:n]
+            return self._properties.get("Derzeitige Beschäftigung", [])[:n]
 
     def get_mail(self) -> str:
         """
@@ -179,7 +179,7 @@ class Expert:
         Returns:
             Die E-Mail-Adresse oder einen leeren String.
         """
-        return self.properties.get("E-Mail", "")
+        return self._properties.get("E-Mail", "")
 
     def get_organisation(self) -> list[str]:
         """
@@ -188,7 +188,7 @@ class Expert:
 
         Returns: Die Liste der Organisationen.
         """
-        current_employment = self.properties.get("Derzeitige Beschäftigung", [])
+        current_employment = self._properties.get("Derzeitige Beschäftigung", [])
         organisations = []
 
         for employment in current_employment:
@@ -216,7 +216,7 @@ class Expert:
         """
 
         if formated:
-            orcid_keywords = self.properties.get("Forschungsinteressen", [])
+            orcid_keywords = self._properties.get("Forschungsinteressen", [])
 
             if len(orcid_keywords) == 1 and "," in orcid_keywords[0]:
                 orcid_keywords = [k.strip() for k in orcid_keywords[0].split(",")]
@@ -230,7 +230,7 @@ class Expert:
 
             return ";".join(orcid_keywords)
         else:
-            return self.properties.get("Forschungsinteressen", [])
+            return self._properties.get("Forschungsinteressen", [])
 
     def get_tadirah(self, formated=True) -> list[str] | str:
         """
@@ -243,10 +243,10 @@ class Expert:
             Die tadirah-Schlagwörter des Experten als String oder Liste von Strings.
         """
         if formated:
-            tadirah = self.properties.get("TaDiRAH-Zuordnung", [])
+            tadirah = self._properties.get("TaDiRAH-Zuordnung", [])
             return ";".join(tadirah)
         else:
-            return self.properties.get("TaDiRAH-Zuordnung", "")
+            return self._properties.get("TaDiRAH-Zuordnung", "")
 
     def extend_properties(self, property: str, value) -> None:
         """
@@ -256,7 +256,7 @@ class Expert:
             property: Der Name der Eigenschaft.
             value: Der Wert der Eigenschaft.
         """
-        self.properties[property] = value
+        self._properties[property] = value
 
     def parse_qmd(self, output_directory_path: str, chevron_template_path: str) -> None:
         """
